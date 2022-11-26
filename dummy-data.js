@@ -51,5 +51,6 @@ export function getFilteredEvents(dateFilter) {
 }
 
 export function getEventById(id) {
+  console.log(id)
   return DUMMY_EVENTS.find((event) => event.id === id);
 }
