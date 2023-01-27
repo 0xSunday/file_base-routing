@@ -2,10 +2,10 @@ import React from "react";
 import { useRouter } from "next/dist/client/router";
 import EventList from "../../components/events/EventList";
 import EventsSearch from "../../components/events/EventsSearch";
-import { getAllEvents } from "../../dummy-data";
+import { getAllEvents } from "../../helper/api-utils";
 
-const events = () => {
-  const events = getAllEvents();
+const events = (props) => {
+  const events = props.allEvents;
   const router = useRouter();
   const filterSearchEvent = (year, month) => {
     const pathUrl = `/events/${year}/${month}`;
@@ -20,3 +20,13 @@ const events = () => {
 };
 
 export default events;
+
+export async function getStaticProps() {
+  const allEvents = await getAllEvents();
+  return {
+    props: {
+      allEvents: allEvents,
+    },
+    revalidate: 60,
+  };
+}

@@ -20,7 +20,7 @@ function EventDetailPage(props) {
   if (!event) {
     return (
       <ErrorAlert>
-        <p>event is not found</p>
+        <p>Loading....</p>
       </ErrorAlert>
     );
   }
@@ -57,7 +57,7 @@ export async function getStaticPaths() {
 
   return {
     paths: paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
