@@ -2,6 +2,8 @@ import { Fragment } from "react";
 import { useRouter } from "next/router";
 
 import { getEventById } from "../../dummy-data";
+// import { getEventById } from "../../dummy-data";
+// import { getEventById } from "../../helper/api-utils";
 import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
@@ -11,7 +13,7 @@ import ErrorAlert from "../../components/ui/error-alert";
 function EventDetailPage() {
   const router = useRouter();
 
-  const eventId = router.query.eventid;
+  const eventId = router.query.eventId;
   const event = getEventById(eventId);
 
   if (!event) {
@@ -39,3 +41,13 @@ function EventDetailPage() {
 }
 
 export default EventDetailPage;
+
+export async function getStaticProps(context) {
+  const eventid = context.params.eventid;
+  const event = getEventById(eventid);
+  return {
+    props: {
+      selectedEvent: event,
+    },
+  };
+}

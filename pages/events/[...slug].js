@@ -56,7 +56,7 @@ const slug = () => {
     );
   }
   const date = new Date(numYear, numMonth - 1);
-  return (
+  return ( 
     <Fragment>
       <ResultsTitle date={date} />
       <EventList items={filtedEvents} />
