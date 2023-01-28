@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import classes from "./Button.module.css";
-const Button = (props) => {
+const button = (props) => {
   if (props.link) {
     return (
       <Link href={props.link} legacyBehavior>
@@ -17,4 +17,4 @@ const Button = (props) => {
   }
 };
 
-export default Button;
+export default button;
