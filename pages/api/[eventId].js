@@ -1,45 +1,64 @@
-const handler = (req, res) => {
+import {
+  connectDatabase,
+  insertDocument,
+  getAllDocuments,
+} from '../../helpers/db-util';
+
+async function handler(req, res) {
   const eventId = req.query.eventId;
-  if (req.method == "post") {
-    const { email, name, text } = res.body;
+
+  let client;
+
+  try {
+    client = await connectDatabase();
+  } catch (error) {
+    res.status(500).json({ message: 'Connecting to the database failed!' });
+    return;
+  }
+
+  if (req.method === 'POST') {
+    const { email, name, text } = req.body;
 
     if (
-      !userEmail ||
-      !userEmail.includes("@") ||
+      !email.includes('@') ||
       !name ||
-      name.trim() === "" ||
+      name.trim() === '' ||
       !text ||
-      text.trim() === ""
+      text.trim() === ''
     ) {
-      res.status(422).json({ message: "Invalid input address." });
+      res.status(422).json({ message: 'Invalid input.' });
+      client.close();
       return;
     }
 
     const newComment = {
-      id: new Date().toISOString(),
       email,
       name,
       text,
+      eventId,
     };
 
-    console.log(newComment);
-    res
-      .status(201)
-      .json({ message: "comment success !!", comment: newComment });
+    let result;
+
+    try {
+      result = await insertDocument(client, 'comments', newComment);
+      newComment._id = result.insertedId;
+      res.status(201).json({ message: 'Added comment.', comment: newComment });
+    } catch (error) {
+      res.status(500).json({ message: 'Inserting comment failed!' });
+    }
   }
-  if (req.method == "GET") {
-    const dummylist = [
-      {
-        id: "c1",
-        name: "sunil",
-        text: "first ",
-      },
-      {
-        id: "c2",
-        name: "reddy",
-        text: "hum first ",
-      },
-    ];
+
+  if (req.method === 'GET') {
+    try {
+      const documents = await getAllDocuments(client, 'comments', { _id: -1 });
+      res.status(200).json({ comments: documents });
+    } catch (error) {
+      res.status(500).json({ message: 'Getting comments failed.' });
+    }
   }
-};
+
+  client.close();
+}
+
 export default handler;
