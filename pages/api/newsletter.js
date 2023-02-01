@@ -10,7 +10,7 @@ async function handler(req, res) {
       return;
     }
 
-    let client;
+    let client; 
 
     try {
       client = await connectDatabase();
